@@ -1,0 +1,48 @@
+# Android Gradle & Build Cache
+.gradle/
+build/
+android/.gradle/
+android/app/build/
+android/gradle-8.*
+local.properties
+*.keystore
+*.jks
+*.zip
+
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# Telegram Session & Sensitive Credentials
+*.session
+*.session-journal
+.env
+.env.local
+.secret_key
+PC/data/.secret_key
+
+# Runtime Databases & Downloads
+*.db
+*.db-shm
+*.db-wal
+PC/data/*.db
+PC/data/*.db-shm
+PC/data/*.db-wal
+PC/downloads/*
+!PC/downloads/.gitkeep
+
+# Logs
+*.log
+flask.log
+
+# OS & Editors
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo

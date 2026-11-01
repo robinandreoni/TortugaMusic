@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Tortuga Music</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=3.6">
+</head>
+<body>
+
+    <!-- ═══ PRELOADER (Motion & Kinetic Typography) ═══ -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-avatar-wrap">
+                <img src="/static/icona_app.jpg" class="preloader-avatar" alt="Tortuga Logo" />
+                <div class="preloader-glow-ring"></div>
+            </div>
+            <div class="preloader-logo">Tortuga<span class="logo-accent">Music</span></div>
+            
+            <!-- Sequential Brand Showcase: Music, Video, TV -->
+            <div class="preloader-brand-showcase" id="brand-showcase">
+                <span class="brand-pill active-music" id="brand-music">🎵 Music</span>
+                <span class="brand-pill" id="brand-video">▶ Video</span>
+                <span class="brand-pill" id="brand-tv">📺 TV</span>
+            </div>
+
+            <!-- Kinetic Soundwave Equalizer -->
+            <div class="preloader-equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+            </div>
+
+            <div id="preloader-status" class="preloader-status">Inizializzazione motore...</div>
+        </div>
+        <audio id="preloader-audio" src="/static/3.mp3" preload="auto"></audio>
+    </div>
+
+    <!-- ═══ MAIN APP ═══ -->
+    <div id="app" style="display:none;">
+
+        <!-- TOP BAR (Triangle Layout) -->
+        <header id="topbar">
+            <!-- Row 1: Left (Music) & Right (Video) -->
+            <div class="topbar-row top">
+                <div class="logo-tab active" id="tab-music" onclick="setMode('music')">
+                    <span class="logo-icon">🎵</span>
+                    <span class="logo-text">Tortuga<span class="logo-accent">Music</span></span>
+                </div>
+                <div class="logo-tab" id="tab-video" onclick="setMode('video')">
+                    <span class="logo-icon" style="color:var(--red);">▶</span>
+                    <span class="logo-text">Tortuga<span style="color:var(--red);">Video</span></span>
+                </div>
+            </div>
+            
+            <!-- Row 2: Triangle Center under front camera (Tortuga TV) -->
+            <div class="topbar-row middle">
+                <div class="logo-tab" id="tab-tv" onclick="openTortugaTV()">
+                    <span class="logo-icon">📺</span>
+                    <span class="logo-text">Tortuga<span style="color:#b537f2; text-shadow: 0 0 10px rgba(181, 55, 242, 0.7);">TV</span></span>
+                </div>
+            </div>
+
+            <!-- Row 3: Direct Search Input + Settings -->
+            <div class="topbar-row bottom">
+                <div class="search-input-wrap-direct">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Cerca brani, artisti o video..." autocomplete="off" />
+                    <button id="btn-clear-search" class="search-clear hidden" onclick="clearSearch()">✕</button>
+                </div>
+                <button id="btn-settings-toggle" class="icon-btn-ghost" onclick="toggleSettings()" title="Impostazioni">
+                    ⚙️
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTENT AREA -->
+        <main id="content">
+
+            <!-- ═══ HOME VIEW ═══ -->
+            <section id="view-home" class="view active">
+                
+                <!-- UNIFIED TRENDING & RECOMMENDED FEED -->
+                <div id="trending-section" class="section-wrap" style="margin-bottom: 24px;">
+                    <div class="section-header-row">
+                        <h2 class="section-title">🔥 In Tendenza per Te</h2>
+                        <div class="mode-switch-container" id="switch-trending" onclick="togglePlayMode('trending')" title="Modalità di riproduzione">
+                            <span class="mode-indicator"></span>
+                            <button type="button" class="mode-btn seq-btn active" data-mode="seq">🔁 In ordine</button>
+                            <button type="button" class="mode-btn rnd-btn" data-mode="rnd">🔀 Casuale</button>
+                        </div>
+                    </div>
+                    <div id="trending-list" class="track-grid">
+                        <div class="loading-placeholder">Caricamento suggerimenti...</div>
+                    </div>
+                </div>
+
+                <div class="app-version">Tortuga Music v3.6 • Ultra Performance</div>
+            </section>
+
+            <!-- ═══ PLAYLIST VIEW (Context-aware: shows Music or Video playlist based on active mode) ═══ -->
+            <section id="view-playlist" class="view">
+                <div id="playlist-section" class="section-wrap" style="margin-bottom: 24px;">
+                    <div class="section-header-row">
+                        <h2 class="section-title" id="playlist-section-title">🎵 Playlist Musica <span id="playlist-count" class="section-badge">0</span></h2>
+                        <div class="mode-switch-container" id="switch-playlist" onclick="togglePlayMode('playlist')" title="Modalità di riproduzione">
+                            <span class="mode-indicator"></span>
+                            <button type="button" class="mode-btn seq-btn active" data-mode="seq">🔁 In ordine</button>
+                            <button type="button" class="mode-btn rnd-btn" data-mode="rnd">🔀 Casuale</button>
+                        </div>
+                    </div>
+                    <div id="playlist-list" class="track-list">
+                        <div class="loading-placeholder">Nessun brano in playlist. Usa ➕ nel player per aggiungere.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══ DOWNLOAD VIEW (Context-aware: shows Downloaded Music or Videos based on active mode) ═══ -->
+            <section id="view-download" class="view">
+                <div id="download-section" class="section-wrap" style="margin-bottom: 24px;">
+                    <div class="section-header-row">
+                        <h2 class="section-title" id="download-section-title">🎧 Canzoni Scaricate <span id="download-count" class="section-badge">0</span></h2>
+                        <div class="mode-switch-container" id="switch-download" onclick="togglePlayMode('download')" title="Modalità di riproduzione">
+                            <span class="mode-indicator"></span>
+                            <button type="button" class="mode-btn seq-btn active" data-mode="seq">🔁 In ordine</button>
+                            <button type="button" class="mode-btn rnd-btn" data-mode="rnd">🔀 Casuale</button>
+                        </div>
+                    </div>
+                    <div id="download-list" class="track-list">
+                        <div class="loading-placeholder">Nessun brano scaricato.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEARCH RESULTS VIEW -->
+            <section id="view-search" class="view">
+                <div class="search-results-header">
+                    <h2 class="section-title">Risultati Ricerca</h2>
+                    <button class="back-home-btn" onclick="clearSearch()">Torna alla Home ✕</button>
+                </div>
+                <div id="search-results" class="track-list"></div>
+            </section>
+        </main>
+
+        <!-- ═══ BOTTOM NAVIGATION BAR (Clean & Minimalist without badge numbers) ═══ -->
+        <nav id="bottom-nav" class="bottom-nav">
+            <button class="nav-tab active" id="nav-home" onclick="switchTab('home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-tab" id="nav-playlist" onclick="switchTab('playlist')">
+                <span class="nav-icon">🎵</span>
+                <span class="nav-label">Playlist</span>
+            </button>
+            <button class="nav-tab" id="nav-download" onclick="switchTab('download')">
+                <span class="nav-icon">📥</span>
+                <span class="nav-label">Download</span>
+            </button>
+        </nav>
+
+        <!-- ═══ BOTTOM PLAYER BAR ═══ -->
+        <div id="player-bar" class="player-bar hidden">
+            <div class="player-track-info" onclick="expandPlayer()">
+                <div id="mini-video-container" class="mini-video-container">
+                    <img id="player-thumb" class="player-thumb" src="" alt="" />
+                </div>
+                <div class="player-text">
+                    <div id="player-title" class="player-title">---</div>
+                    <div id="player-artist" class="player-artist">---</div>
+                </div>
+            </div>
+            <div class="player-controls-mini">
+                <button class="ctrl-btn" onclick="prevTrack()">⏮</button>
+                <button class="ctrl-btn ctrl-play" id="btn-play" onclick="togglePlay()">▶</button>
+                <button class="ctrl-btn" onclick="nextTrack()">⏭</button>
+            </div>
+            <div class="player-progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- ═══ EXPANDED PLAYER (fullscreen overlay) ═══ -->
+        <div id="player-expanded" class="player-expanded hidden">
+            <div class="expanded-header">
+                <button class="expand-close" onclick="collapsePlayer()">&#x25BC; Chiudi</button>
+            </div>
+            
+            <div id="expanded-video-container" class="expanded-artwork-wrap">
+                <img id="expanded-thumb" class="expanded-artwork" src="" alt="" />
+            </div>
+            <div class="expanded-info">
+                <div id="expanded-title" class="expanded-title">---</div>
+                <div id="expanded-artist" class="expanded-artist">---</div>
+            </div>
+            <div class="expanded-seekbar">
+                <span id="time-current" class="time-label">0:00</span>
+                <input type="range" id="seek-slider" class="seek-slider" min="0" max="100" value="0" oninput="seekTo(this.value)" />
+                <span id="time-total" class="time-label">0:00</span>
+            </div>
+            <div class="expanded-controls">
+                <button class="ex-ctrl" onclick="prevTrack()">⏮</button>
+                <button class="ex-ctrl ex-play" id="btn-play-ex" onclick="togglePlay()">▶</button>
+                <button class="ex-ctrl" onclick="nextTrack()">⏭</button>
+            </div>
+            
+            <!-- ROW 1: 3 ACTION BUTTONS -->
+            <div class="expanded-actions-grid">
+                <button id="btn-bluetooth" class="action-grid-btn" onclick="openBluetooth()">
+                    <span class="action-grid-icon">🎧</span>
+                    <span class="action-grid-label">Dispositivi</span>
+                </button>
+                <button id="btn-add-playlist" class="action-grid-btn" onclick="addToPlaylist()">
+                    <span class="action-grid-icon">➕</span>
+                    <span class="action-grid-label">Playlist</span>
+                </button>
+                <button id="btn-switch-mode" class="action-grid-btn" onclick="toggleModeFromPlayer()">
+                    <span class="action-grid-icon" id="switch-icon">🎬</span>
+                    <span class="action-grid-label" id="switch-label">Passa a Video</span>
+                </button>
+            </div>
+            <!-- ROW 2: DOWNLOAD BUTTON CENTERED -->
+            <div class="expanded-download-row">
+                <button id="btn-download" class="action-grid-btn download-btn-wide" onclick="startDownload()">
+                    <span class="action-grid-icon">📥</span>
+                    <span class="action-grid-label">Download</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ═══ SETTINGS MODAL ═══ -->
+        <div id="settings-modal" class="settings-modal hidden">
+            <div class="settings-backdrop" onclick="toggleSettings()"></div>
+            <div class="settings-sheet">
+                <div class="settings-header">
+                    <div class="settings-title">⚙️ Impostazioni</div>
+                    <button class="settings-close" onclick="toggleSettings()">✕</button>
+                </div>
+                
+                <div class="settings-body">
+                    <!-- Qualità Streaming -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">QUALITÀ STREAMING</div>
+                        <div class="settings-option">
+                            <div>
+                                <div class="option-name">Qualità Massima</div>
+                                <div class="option-desc">Audio ad alta definizione (320kbps)</div>
+                            </div>
+                            <input type="radio" name="stream_quality" value="high" id="q-high" checked onchange="setQuality('high')">
+                        </div>
+                        <div class="settings-option">
+                            <div>
+                                <div class="option-name">Risparmio Dati</div>
+                                <div class="option-desc">Meno consumo di banda internet</div>
+                            </div>
+                            <input type="radio" name="stream_quality" value="low" id="q-low" onchange="setQuality('low')">
+                        </div>
+                    </div>
+
+                    <!-- Gestione Memoria Cache -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">MEMORIA & CACHE ULTRA-VELOCE</div>
+                        <div class="cache-info-box">
+                            <div class="cache-stat-item">
+                                <span class="cache-stat-val" id="stat-streams">0</span>
+                                <span class="cache-stat-lbl">Stream in cache</span>
+                            </div>
+                            <div class="cache-stat-item">
+                                <span class="cache-stat-val" id="stat-searches">0</span>
+                                <span class="cache-stat-lbl">Ricerche salvate</span>
+                            </div>
+                            <div class="cache-stat-item">
+                                <span class="cache-stat-val" id="stat-size">0 KB</span>
+                                <span class="cache-stat-lbl">Dimensione DB</span>
+                            </div>
+                        </div>
+                        <button class="settings-action-btn" onclick="clearCache()">
+                            🗑️ Svuota Cache Temporanea
+                        </button>
+                    </div>
+
+                    <!-- Info App -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">INFORMAZIONI</div>
+                        <div class="settings-info-row">
+                            <span>Versione</span>
+                            <span class="info-tag">v3.6 Premium</span>
+                        </div>
+                        <div class="settings-info-row">
+                            <span>Server Engine</span>
+                            <span class="info-tag" id="engine-status">Flask + SQLite Cache OK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- DOWNLOAD PROGRESS TOAST -->
+    <div id="download-toast" class="download-toast hidden">
+        <div class="toast-info">
+            <span id="download-title">Scaricamento...</span>
+            <span id="download-eta" class="toast-eta">0%</span>
+        </div>
+        <div class="toast-progress-bar">
+            <div id="download-progress-fill" class="toast-progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- MEDIA ELEMENT -->
+    <div id="media-host" style="display:none;">
+        <video id="audio-player" playsinline style="width:100%; height:100%; display:none; border-radius:inherit;"></video>
+    </div>
+
+    <script src="/static/app.js?v=3.6"></script>
+</body>
+</html>

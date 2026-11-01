@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="TortugaTV — Film, Serie TV & Anime">
+    <title>TortugaTV</title>
+    <link rel="stylesheet" href="/static/style_tv.css?v=5.5">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏴‍☠️</text></svg>">
+</head>
+<body>
+    <!-- ═══ PRELOADER (Audio: 4.mp3) ═══ -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">
+                <img src="/static/tartugalogo_transparent.png" alt="Tortuga TV Logo" class="preloader-logo-img">
+            </div>
+            <h1 class="preloader-title" style="text-shadow: 0 0 15px #00f2ff; color: #00f2ff;">Tortuga<span style="color: #b537f2; text-shadow: 0 0 15px rgba(181, 55, 242, 0.7);">TV</span></h1>
+            <p class="preloader-subtitle">ACCESSO AL SISTEMA STREAMING</p>
+            
+            <div id="preloader-loading-screen" style="margin-top: 30px;">
+                <div class="spinner spinner-lg" style="border-top-color: #00f2ff; margin: 0 auto 16px;"></div>
+                <p id="preloader-status" class="preloader-status">Avvio in corso - Controllo flussi...</p>
+                <button id="preloader-audio-btn" class="preloader-audio-btn" style="display:none;" onclick="triggerPreloaderAudio()">
+                    🔊 Tocca qui per avviare con audio
+                </button>
+            </div>
+        </div>
+        <audio id="preloader-audio" src="/static/1.mp3" preload="auto"></audio>
+    </div>
+    
+    <div class="app-container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-tv" id="navbar">
+            <a class="navbar-brand" onclick="router.navigate('home')" data-focusable style="display:flex; align-items:center; gap:10px;">
+                <div class="logo-icon">
+                    <img src="/static/tartugalogo_transparent.png" alt="Logo" style="height: 32px; width: auto; object-fit: contain;">
+                </div>
+                <div style="display:flex; flex-direction:column; line-height: 1.1;">
+                    <span class="logo-text">Tortuga<span style="color:#b537f2; text-shadow: 0 0 10px rgba(181, 55, 242, 0.7);">TV</span></span>
+                    <span style="font-size: 0.62rem; color: var(--text-muted); letter-spacing: 2px; font-weight: 700; text-transform: uppercase;">Home</span>
+                </div>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a class="nav-link" data-view="film" onclick="filterByType('movie')" data-focusable tabindex="0">Film</a>
+                <a class="nav-link" data-view="serie" onclick="filterByType('tv')" data-focusable tabindex="0">Serie TV</a>
+                <a class="nav-link" data-view="anime" onclick="loadAnimeSection()" data-focusable tabindex="0">Anime</a>
+                <a class="nav-link" data-view="iptv" onclick="loadIptvSection()" data-focusable tabindex="0">📡 IPTV Live</a>
+                
+                <!-- Back to Tortuga Music Button -->
+                                <!-- Feedback & Suggestions Modal Button -->
+                <a class="nav-link nav-link-feedback" id="nav-link-feedback" onclick="openFeedbackModal()" data-focusable tabindex="0" title="Bacheca Suggerimenti & Idee">
+                    📌 Bacheca
+                </a>
+                <a class="nav-link nav-link-music" onclick="goToMusicApp()" data-focusable tabindex="0" style="background: rgba(30, 215, 96, 0.15); border: 1px solid #1ed760; color: #1ed760; border-radius: 8px; padding: 6px 14px; font-weight: 700; text-shadow: 0 0 8px rgba(30,215,96,0.6); display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                    🎵 Tortuga Music
+                </a>
+            </div>
+
+            <div class="navbar-search" id="navbar-search">
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input 
+                        type="text" 
+                        class="search-input search-input-tv" 
+                        id="nav-search-input"
+                        placeholder="Cerca un titolo..."
+                        autocomplete="off"
+                        data-focusable
+                        tabindex="0"
+                    >
+                    <button class="search-clear" id="nav-search-clear" onclick="clearNavSearch()">✕</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="app">
+            <!-- Content injected by JS -->
+        </main>
+    </div>
+
+    <!-- Floating Mobile Rotation & Fullscreen Helper -->
+    <div id="mobile-rotate-prompt" class="mobile-rotate-prompt hidden" onclick="requestLandscapeFullscreen()">
+        <span class="rotate-icon">🔄</span>
+        <span>Ruota in orizzontale a schermo intero</span>
+    </div>
+
+    <!-- ═══ ORIENTATION GUARD (OBBLIGO ROTAZIONE ORIZZONTALE PER SMARTPHONE) ═══ -->
+    <div id="rotate-device-overlay" class="rotate-device-overlay" style="display:none;">
+        <div class="rotate-modal-card">
+            <div class="rotate-phone-anim">
+                <div class="rotate-phone-body">
+                    <div class="phone-screen">
+                        <span class="phone-emoji">📺</span>
+                    </div>
+                </div>
+                <div class="rotate-glow-ring"></div>
+            </div>
+            <h2 class="rotate-title">Ruota lo Smartphone in Orizzontale</h2>
+            <p class="rotate-desc">
+                Tortuga TV Cinema & Serie è ottimizzato per la modalità <strong>Orizzontale (Landscape)</strong> a schermo intero per una visione cinematografica fluida.
+            </p>
+            <button class="rotate-action-btn" onclick="requestLandscapeMode()">
+                <span>🖥️</span> <span>Gira a Schermo Intero</span>
+            </button>
+            <div class="rotate-hint">Oppure sblocca la rotazione automatica del tuo dispositivo e ruotalo</div>
+        </div>
+    </div>
+
+            <!-- ═══ LA BACHECA SEMPLICE DI TORTUGA ═══ -->
+    <div id="feedback-modal" class="feedback-modal hidden" onclick="handleFeedbackBackdropClick(event)">
+        <div class="feedback-backdrop"></div>
+        <div class="feedback-sheet bacheca-sheet" id="feedback-sheet">
+            <div class="feedback-header">
+                <div class="feedback-header-left">
+                    <span class="feedback-header-icon">📌</span>
+                    <div>
+                        <h2 class="feedback-title">La Bacheca di Tortuga</h2>
+                        <p class="feedback-subtitle">Lascia un saluto, un consiglio o una richiesta per la ciurma</p>
+                    </div>
+                </div>
+                <button class="feedback-close-btn" onclick="closeFeedbackModal()" data-focusable tabindex="0" title="Chiudi (Esc)">✕</button>
+            </div>
+
+            <div class="bacheca-body">
+                <!-- Box scrittura messaggio -->
+                <form class="bacheca-input-card" onsubmit="submitFeedback(event)">
+                    <div class="bacheca-form-inputs">
+                        <input type="text" id="fb-author" class="bacheca-input" placeholder="Il tuo nome (es. Marco)" maxlength="30" required autocomplete="off" />
+                        <textarea id="fb-text" class="bacheca-textarea" placeholder="Scrivi qui il tuo messaggio, richiesta di film o consiglio..." maxlength="500" required></textarea>
+                    </div>
+                    <div class="bacheca-form-action">
+                        <button type="submit" id="fb-submit-btn" class="bacheca-submit-btn" data-focusable tabindex="0">
+                            <span>📌 Attacca in Bacheca</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Messaggi bacheca -->
+                <div class="bacheca-feed">
+                    <div class="bacheca-feed-header">
+                        <span class="bacheca-feed-title">💬 I messaggi della bacheca</span>
+                        <span class="bacheca-count" id="fb-count-badge">0</span>
+                    </div>
+                    <div class="bacheca-list" id="feedback-list">
+                        <div style="text-align:center; padding: 20px; color:#83859b;">Caricamento bacheca...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Fullscreen Dedicated Offline Video Player Modal -->
+    <div id="offline-player-modal" class="offline-player-modal hidden">
+        <div class="offline-player-header">
+            <button class="btn btn-info btn-sm" id="btn-close-offline-player" onclick="closeOfflinePlayer()" tabindex="0">← Chiudi</button>
+            <span class="offline-player-title" id="offline-player-title">Riproduzione Offline</span>
+        </div>
+        <div class="offline-player-video-wrap">
+            <video id="offline-video-player" controls crossorigin="anonymous" playsinline webkit-playsinline></video>
+        </div>
+    </div>
+
+    <!-- Download Progress -->
+    <div class="download-progress" id="download-progress">
+        <div class="progress-title">
+            <span>⬇️</span>
+            <span id="dl-title">Downloading...</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="dl-fill"></div>
+        </div>
+        <div class="progress-text" id="dl-text">Preparazione...</div>
+    </div>
+
+    <!-- Version Tag -->
+    <div style="position: fixed; bottom: 10px; right: 10px; color: rgba(255,255,255,0.3); font-size: 12px; z-index: 9999; pointer-events: none;">
+        TortugaTV • v3.6 Integrated
+    </div>
+
+    <!-- HLS.js (Local bundle for offline/isolated resilience) -->
+    <script src="/static/hls.min.js"></script>
+    
+    <!-- App Logic (TV version) -->
+    <script src="/static/app_tv.js?v=5.5"></script>
+</body>
+</html>

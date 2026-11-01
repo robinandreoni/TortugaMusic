@@ -1,0 +1,24 @@
+{
+  "name": "Tortuga Music & TV",
+  "short_name": "Tortuga",
+  "description": "Piattaforma di Streaming Web per Musica, Video, Film, Serie TV e Anime",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0b10",
+  "theme_color": "#00f2ff",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/static/icona_app.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icona_app.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

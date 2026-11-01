@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="TortugaTV — Film, Serie TV & Anime">
+    <title>TortugaTV</title>
+    <link rel="stylesheet" href="/static/style_tv.css?v=3.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏴‍☠️</text></svg>">
+</head>
+<body>
+    <!-- ═══ PRELOADER (Audio: 4.mp3) ═══ -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">
+                <img src="/static/tartugalogo_transparent.png" alt="Tortuga TV Logo" class="preloader-logo-img">
+            </div>
+            <h1 class="preloader-title" style="text-shadow: 0 0 15px #00f2ff; color: #00f2ff;">Tortuga<span style="color: #b537f2; text-shadow: 0 0 15px rgba(181, 55, 242, 0.7);">TV</span></h1>
+            <p class="preloader-subtitle">ACCESSO AL SISTEMA STREAMING</p>
+            
+            <div id="preloader-loading-screen" style="margin-top: 30px;">
+                <div class="spinner spinner-lg" style="border-top-color: #00f2ff; margin: 0 auto 16px;"></div>
+                <p id="preloader-status" class="preloader-status">Avvio in corso - Controllo flussi...</p>
+            </div>
+        </div>
+        <audio id="preloader-audio" src="/static/4.mp3" preload="auto"></audio>
+    </div>
+    
+    <div class="app-container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-tv" id="navbar">
+            <a class="navbar-brand" onclick="router.navigate('home')" data-focusable style="display:flex; align-items:center; gap:10px;">
+                <div class="logo-icon">
+                    <img src="/static/tartugalogo_transparent.png" alt="Logo" style="height: 32px; width: auto; object-fit: contain;">
+                </div>
+                <div style="display:flex; flex-direction:column; line-height: 1.1;">
+                    <span class="logo-text">Tortuga<span style="color:#b537f2; text-shadow: 0 0 10px rgba(181, 55, 242, 0.7);">TV</span></span>
+                    <span style="font-size: 0.62rem; color: var(--text-muted); letter-spacing: 2px; font-weight: 700; text-transform: uppercase;">Home</span>
+                </div>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a class="nav-link" data-view="film" onclick="filterByType('movie')" data-focusable tabindex="0">Film</a>
+                <a class="nav-link" data-view="serie" onclick="filterByType('tv')" data-focusable tabindex="0">Serie TV</a>
+                <a class="nav-link" data-view="anime" onclick="loadAnimeSection()" data-focusable tabindex="0">Anime</a>
+                <a class="nav-link" data-view="iptv" onclick="loadIptvSection()" data-focusable tabindex="0">📡 IPTV Live</a>
+                
+                <!-- Back to Tortuga Music Button -->
+                <a class="nav-link nav-link-music" onclick="goToMusicApp()" data-focusable tabindex="0" style="background: rgba(30, 215, 96, 0.15); border: 1px solid #1ed760; color: #1ed760; border-radius: 8px; padding: 6px 14px; font-weight: 700; text-shadow: 0 0 8px rgba(30,215,96,0.6); display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                    🎵 Tortuga Music
+                </a>
+
+                <div class="navbar-search" style="margin-left: 10px; display: flex; align-items: center;">
+                    <div class="search-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input 
+                            type="text" 
+                            class="search-input search-input-tv" 
+                            id="nav-search-input"
+                            placeholder="Cerca un titolo..."
+                            autocomplete="off"
+                            data-focusable
+                            tabindex="0"
+                        >
+                        <button class="search-clear" id="nav-search-clear" onclick="clearNavSearch()">✕</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="app">
+            <!-- Content injected by JS -->
+        </main>
+    </div>
+
+    <!-- Tastiera a Schermo (OSK) per TV -->
+    <div id="tv-keyboard" class="tv-keyboard hidden">
+        <div class="keyboard-container">
+            <div class="keyboard-display-wrapper">
+                <input type="text" id="keyboard-display" readonly placeholder="Cerca un titolo...">
+            </div>
+            <div class="keyboard-rows">
+                <div class="keyboard-row">
+                    <button class="key-btn" tabindex="0" id="osk-first-key" onclick="handleKey('A')">A</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('B')">B</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('C')">C</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('D')">D</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('E')">E</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('F')">F</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('G')">G</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('H')">H</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('I')">I</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key-btn" tabindex="0" onclick="handleKey('J')">J</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('K')">K</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('L')">L</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('M')">M</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('N')">N</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('O')">O</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('P')">P</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('Q')">Q</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('R')">R</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key-btn" tabindex="0" onclick="handleKey('S')">S</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('T')">T</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('U')">U</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('V')">V</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('W')">W</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('X')">X</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('Y')">Y</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('Z')">Z</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('-')">-</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key-btn" tabindex="0" onclick="handleKey('1')">1</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('2')">2</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('3')">3</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('4')">4</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('5')">5</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('6')">6</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('7')">7</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('8')">8</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('9')">9</button>
+                    <button class="key-btn" tabindex="0" onclick="handleKey('0')">0</button>
+                </div>
+                <div class="keyboard-row action-row">
+                    <button class="key-btn action-btn space-btn" tabindex="0" onclick="handleKey(' ')">Spazio</button>
+                    <button class="key-btn action-btn" tabindex="0" onclick="handleBackspace()">⌫ Cancella</button>
+                    <button class="key-btn action-btn search-btn" tabindex="0" onclick="submitOSK()">🔍 Cerca</button>
+                    <button class="key-btn action-btn close-btn" tabindex="0" onclick="closeOSK()">✕ Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Fullscreen Dedicated Offline Video Player Modal -->
+    <div id="offline-player-modal" class="offline-player-modal hidden">
+        <div class="offline-player-header">
+            <button class="btn btn-info btn-sm" id="btn-close-offline-player" onclick="closeOfflinePlayer()" tabindex="0">← Chiudi</button>
+            <span class="offline-player-title" id="offline-player-title">Riproduzione Offline</span>
+        </div>
+        <div class="offline-player-video-wrap">
+            <video id="offline-video-player" controls crossorigin="anonymous" playsinline></video>
+        </div>
+    </div>
+
+    <!-- Download Progress -->
+    <div class="download-progress" id="download-progress">
+        <div class="progress-title">
+            <span>⬇️</span>
+            <span id="dl-title">Downloading...</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="dl-fill"></div>
+        </div>
+        <div class="progress-text" id="dl-text">Preparazione...</div>
+    </div>
+
+    <!-- Version Tag -->
+    <div style="position: fixed; bottom: 10px; right: 10px; color: rgba(255,255,255,0.3); font-size: 12px; z-index: 9999; pointer-events: none;">
+        TortugaTV • v3.6 Integrated
+    </div>
+
+    <!-- HLS.js (Local bundle for offline/isolated resilience) -->
+    <script src="/static/hls.min.js"></script>
+    
+    <!-- App Logic (TV version) -->
+    <script src="/static/app_tv.js?v=3.6"></script>
+</body>
+</html>

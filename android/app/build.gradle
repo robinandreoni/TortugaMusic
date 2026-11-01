@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.application'
+    id 'com.chaquo.python'
+}
+
+android {
+    namespace 'com.tortuga.music'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.TortugaMusic"
+        minSdk 24
+        targetSdk 36
+        versionCode 21
+        versionName "3.6"
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+    }
+
+    signingConfigs {
+        release {
+            def keystoreFile = file(System.getenv("KEYSTORE_PATH") ?: "tortugamusic.keystore")
+            if (keystoreFile.exists()) {
+                storeFile keystoreFile
+                storePassword System.getenv("KEYSTORE_PASSWORD") ?: "password"
+                keyAlias System.getenv("KEYSTORE_ALIAS") ?: "alias"
+                keyPassword System.getenv("KEY_PASSWORD") ?: "password"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
+        }
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        version "3.11"
+        buildPython System.getenv("PYTHON_EXECUTABLE") ?: "python"
+
+        pip {
+            install "flask"
+            install "requests"
+            install "yt-dlp"
+            install "cloudscraper"
+            install "beautifulsoup4"
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.webkit:webkit:1.10.0'
+    implementation 'androidx.media:media:1.7.0'
+}

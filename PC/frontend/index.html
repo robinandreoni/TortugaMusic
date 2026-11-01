@@ -1,0 +1,535 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Tortuga Music & Video â€” Web & Desktop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=5.2">
+</head>
+<body class="device-desktop desktop-mode">
+    <!-- â•â•â• PRE-PRELOADER SIMPSON ("THE ANDREONI") â•â•â• -->
+    <div id="simpson-preloader" class="simpson-preloader">
+        <div class="simpson-content-flow">
+            <!-- Scritta Tortuga Music isolata e perfettamente responsive -->
+            <div class="simpson-logo-wrap">
+                <img src="/static/tartugalogo_transparent.png" alt="Tortuga Music" class="simpson-logo-img">
+            </div>
+
+            <!-- Nuvoletta Fumetto Simpson (Cartoon Speech Bubble) posizionata comodamente sotto la scritta -->
+            <div id="simpson-bubble" class="simpson-bubble">
+                <div class="bubble-header">
+                    <span class="donut-icon">ðŸ©</span>
+                    <h2 class="bubble-title">Tortuga Music Gateway</h2>
+                </div>
+                <p class="bubble-subtitle">Inserisci la parola d'ordine segreta:</p>
+                <form id="simpson-form" onsubmit="submitSimpsonAuth(event)" autocomplete="off">
+                    <div class="simpson-input-wrap">
+                        <input 
+                            type="password" 
+                            id="simpson-pwd" 
+                            class="simpson-input" 
+                            placeholder="Parola d'ordine..." 
+                            required 
+                            autofocus
+                        >
+                        <button type="button" class="simpson-eye-btn" onclick="toggleSimpsonPwd()" title="Mostra password">ðŸ‘ï¸</button>
+                    </div>
+                    <div id="simpson-msg" class="simpson-msg"></div>
+                    <button type="submit" id="simpson-submit-btn" class="simpson-submit-btn">
+                        <span>Entra</span> <span>ðŸ©</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- â•â•â• PRELOADER (con 1.mp3 a durata calibrata ~6.6s) â•â•â• -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-avatar-wrap">
+                <img src="/static/icona_app.jpg" class="preloader-avatar" alt="Tortuga Logo" />
+                <div class="preloader-glow-ring"></div>
+            </div>
+            <div class="preloader-logo">Tortuga<span class="logo-accent">Music</span></div>
+            
+            <div class="preloader-brand-showcase" id="brand-showcase">
+                <span class="brand-pill active-music" id="brand-music">ðŸŽµ Music</span>
+                <span class="brand-pill" id="brand-video">â–¶ Video</span>
+                <span class="brand-pill" id="brand-tv">ðŸ“º TV</span>
+            </div>
+
+            <div class="preloader-equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+            </div>
+
+            <div id="preloader-status" class="preloader-status">Inizializzazione motore...</div>
+            <button id="preloader-audio-btn" class="preloader-audio-btn" style="display:none;" onclick="triggerPreloaderAudio()">
+                ðŸ”Š Tocca qui per avviare con audio
+            </button>
+        </div>
+        <audio id="preloader-audio" src="/static/1.mp3" preload="auto"></audio>
+    </div>
+
+    <!-- â•â•â• MAIN DESKTOP APP â•â•â• -->
+    <div id="app" class="desktop-app-layout" style="display:none;">
+
+        <!-- â•â•â• SIDEBAR DESKTOP A SINISTRA â•â•â• -->
+        <aside id="sidebar" class="desktop-sidebar">
+            <div class="sidebar-brand-header">
+                <div class="sidebar-logo-icon" id="sidebar-logo-icon">ðŸŽµ</div>
+                <div class="sidebar-logo-text" id="sidebar-logo-text">Tortuga<span class="logo-accent" id="sidebar-logo-accent">Music</span></div>
+            </div>
+
+            <!-- Navigazione Principale -->
+            <nav class="sidebar-nav-group">
+                <div class="sidebar-group-title">NAVIGAZIONE</div>
+                <button class="nav-tab sidebar-nav-item active" id="nav-home" onclick="switchTab('home')">
+                    <span class="nav-icon">ðŸ </span>
+                    <span class="nav-label">Home & Tendenze</span>
+                </button>
+                <button class="nav-tab sidebar-nav-item" id="nav-playlist" onclick="switchTab('playlist')">
+                    <span class="nav-icon">ðŸ“‘</span>
+                    <span class="nav-label">La Mia Playlist</span>
+                </button>
+                <button class="nav-tab sidebar-nav-item" id="nav-download" onclick="switchTab('download')">
+                    <span class="nav-icon">ðŸ’¾</span>
+                    <span class="nav-label">Brani Scaricati</span>
+                </button>
+            </nav>
+
+            <!-- Sezione Speciale Tortuga Cinema & TV -->
+            <div class="sidebar-tv-banner" onclick="openTortugaTV()" title="Apri Tortuga Cinema & TV">
+                <div class="tv-banner-glow"></div>
+                <div class="tv-banner-content">
+                    <div class="tv-banner-tag">PASSA AL CINEMA</div>
+                    <div class="tv-banner-name">ðŸ“º Tortuga<span class="tv-accent">TV</span></div>
+                    <div class="tv-banner-desc">Film, Serie TV & Anime</div>
+                </div>
+            </div>
+
+            <!-- Footer Sidebar con Impostazioni e Versione -->
+            <div class="sidebar-bottom">
+                <button class="sidebar-action-btn" onclick="toggleSettings()" title="Impostazioni">
+                    <span class="btn-icon">âš™ï¸</span> Impostazioni
+                </button>
+                <div class="sidebar-meta-version">Tortuga Music v3.6 PC</div>
+            </div>
+        </aside>
+
+        <!-- â•â•â• AREA PRINCIPALE DI CONTENUTO â•â•â• -->
+        <div class="desktop-main-wrapper">
+
+            <!-- â•â•â• TOPBAR DESKTOP ORIZZONTALE â•â•â• -->
+            <header id="topbar" class="desktop-topbar">
+                <!-- Selettore ModalitÃ  (Musica / Video) -->
+                <div class="mode-pill-container">
+                    <button class="mode-pill active" id="tab-music" onclick="setMode('music')">
+                        <span class="pill-icon">ðŸŽµ</span> Musica
+                    </button>
+                    <button class="mode-pill" id="tab-video" onclick="setMode('video')">
+                        <span class="pill-icon">â–¶</span> Video
+                    </button>
+                </div>
+
+                <!-- Barra di Ricerca Centrale Desktop -->
+                <div class="desktop-search-container">
+                    <span class="search-icon">ðŸ”</span>
+                    <input type="text" id="search-input" placeholder="Cerca canzoni, artisti o video su Tortuga..." autocomplete="off" />
+                    <button id="btn-clear-search" class="search-clear hidden" onclick="clearSearch()" title="Cancella">âœ•</button>
+                </div>
+
+                <!-- Azioni Rapide a Destra -->
+                <div class="topbar-right-actions">
+                    <button class="topbar-bandwidth-btn" onclick="openBandwidthModal()" title="Monitor Consumo Banda & Dati">
+                        <span>ðŸ“Š</span> <span class="btn-text">Banda</span>
+                    </button>
+                    <button class="topbar-tv-shortcut" onclick="openTortugaTV()" title="Apri Tortuga TV">
+                        <span>ðŸ“º</span> Tortuga TV
+                    </button>
+                    <button id="btn-settings-toggle" class="topbar-settings-btn" onclick="toggleSettings()" title="Impostazioni">
+                        âš™ï¸
+                    </button>
+                </div>
+            </header>
+
+            <!-- â•â•â• CONTENUTO SCORREVOLE â•â•â• -->
+            <main id="content" class="desktop-content">
+
+                <!-- â•â•â• HOME VIEW â•â•â• -->
+                <section id="view-home" class="view active">
+                    <div id="trending-section" class="section-wrap">
+                        <div class="section-header-row">
+                            <h2 class="section-title">ðŸ”¥ In Tendenza per Te</h2>
+                            <div class="mode-switch-container" id="switch-trending" onclick="togglePlayMode('trending')" title="ModalitÃ  di riproduzione">
+                                <span class="mode-indicator"></span>
+                                <button type="button" class="mode-btn seq-btn active" data-mode="seq">ðŸ” In ordine</button>
+                                <button type="button" class="mode-btn rnd-btn" data-mode="rnd">ðŸ”€ Casuale</button>
+                            </div>
+                        </div>
+                        <div id="trending-list" class="track-grid">
+                            <div class="loading-placeholder">Caricamento suggerimenti in corso...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- â•â•â• PLAYLIST VIEW â•â•â• -->
+                <section id="view-playlist" class="view">
+                    <div id="playlist-section" class="section-wrap">
+                        <div class="section-header-row">
+                            <h2 class="section-title" id="playlist-section-title">ðŸŽµ Playlist Personale <span id="playlist-count" class="section-badge">0</span></h2>
+                            <div class="mode-switch-container" id="switch-playlist" onclick="togglePlayMode('playlist')" title="ModalitÃ  di riproduzione">
+                                <span class="mode-indicator"></span>
+                                <button type="button" class="mode-btn seq-btn active" data-mode="seq">ðŸ” In ordine</button>
+                                <button type="button" class="mode-btn rnd-btn" data-mode="rnd">ðŸ”€ Casuale</button>
+                            </div>
+                        </div>
+                        <div id="playlist-list" class="track-list">
+                            <div class="loading-placeholder">Nessun brano in playlist. Usa â¤ï¸ o âž• per aggiungere tracce.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- â•â•â• DOWNLOAD VIEW â•â•â• -->
+                <section id="view-download" class="view">
+                    <div id="download-section" class="section-wrap">
+                        <div class="section-header-row">
+                            <h2 class="section-title" id="download-section-title">ðŸŽ§ Canzoni Scaricate <span id="download-count" class="section-badge">0</span></h2>
+                            <div class="mode-switch-container" id="switch-download" onclick="togglePlayMode('download')" title="ModalitÃ  di riproduzione">
+                                <span class="mode-indicator"></span>
+                                <button type="button" class="mode-btn seq-btn active" data-mode="seq">ðŸ” In ordine</button>
+                                <button type="button" class="mode-btn rnd-btn" data-mode="rnd">ðŸ”€ Casuale</button>
+                            </div>
+                        </div>
+                        <div id="download-list" class="track-list">
+                            <div class="loading-placeholder">Nessun brano scaricato sul computer.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- â•â•â• SEARCH RESULTS VIEW â•â•â• -->
+                <section id="view-search" class="view">
+                    <div class="search-results-header">
+                        <h2 class="section-title">Risultati di Ricerca</h2>
+                        <button class="back-home-btn" onclick="clearSearch()">Torna alla Home âœ•</button>
+                    </div>
+                    <div id="search-results" class="track-grid"></div>
+                </section>
+            </main>
+
+        </div> <!-- /desktop-main-wrapper -->
+
+        <!-- â•â•â• PLAYER BAR DESKTOP (In basso a tutta larghezza, protetto dalla taskbar) â•â•â• -->
+        <div id="player-bar" class="player-bar desktop-player-bar hidden">
+            <!-- Colonna 1: Info Brano (Sinistra) -->
+            <div class="player-track-info" onclick="expandPlayer()">
+                <div id="mini-video-container" class="mini-video-container">
+                    <img id="player-thumb" class="player-thumb" src="/static/icona_app.jpg" alt="" />
+                </div>
+                <div class="player-text">
+                    <div id="player-title" class="player-title">---</div>
+                    <div id="player-artist" class="player-artist">---</div>
+                </div>
+                <button class="player-fav-btn" onclick="event.stopPropagation(); addToPlaylist();" title="Aggiungi ai Preferiti">
+                    â¤ï¸
+                </button>
+            </div>
+
+            <!-- Colonna 2: Controlli Centrali & Scrubber (Centro) -->
+            <div class="player-controls-center">
+                <div class="player-ctrls-row">
+                    <button class="ctrl-btn ctrl-sub" onclick="togglePlayMode('trending')" title="Riproduzione Casuale">ðŸ”€</button>
+                    <button class="ctrl-btn" onclick="prevTrack()" title="Brano Precedente">â®</button>
+                    <button class="ctrl-btn ctrl-play" id="btn-play" onclick="togglePlay()" title="Riproduci/Pausa">â–¶</button>
+                    <button class="ctrl-btn" onclick="nextTrack()" title="Brano Successivo">â­</button>
+                    <button class="ctrl-btn ctrl-sub" onclick="togglePlayMode('playlist')" title="Ripeti">ðŸ”</button>
+                </div>
+                <div class="player-scrubber-row">
+                    <span id="player-time-cur" class="time-label">0:00</span>
+                    <div class="player-progress-bar" onclick="seekFromProgressBar(event)" title="Trascina o clicca per saltare">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <span id="player-time-tot" class="time-label">0:00</span>
+                </div>
+            </div>
+
+            <!-- Colonna 3: Azioni Desktop & Volume (Destra) -->
+            <div class="player-actions-right">
+                <button class="action-btn-desktop" onclick="toggleModeFromPlayer()" title="Passa tra Audio e Video">ðŸŽ¬</button>
+                <button class="action-btn-desktop" onclick="startDownload()" title="Scarica su PC">ðŸ“¥</button>
+                <button class="action-btn-desktop" onclick="expandPlayer()" title="Schermo Intero">â›¶</button>
+                <div class="volume-control-wrap">
+                    <span class="vol-icon" onclick="toggleMute()" title="Disattiva/Attiva Volume">ðŸ”Š</span>
+                    <input type="range" id="desktop-volume" min="0" max="100" value="100" oninput="setDesktopVolume(this.value)" class="volume-slider" title="Volume" />
+                </div>
+            </div>
+        </div>
+
+        <!-- â•â•â• EXPANDED PLAYER (FULLSCREEN / VIDEO OVERLAY) â•â•â• -->
+        <div id="player-expanded" class="player-expanded hidden">
+            <div class="expanded-header">
+                <button class="expand-close" onclick="collapsePlayer()">â–¼ Riduci a Barra</button>
+            </div>
+            
+            <div id="expanded-video-container" class="expanded-artwork-wrap">
+                <img id="expanded-thumb" class="expanded-artwork" src="" alt="" />
+                <video id="audio-player" playsinline webkit-playsinline style="display:none;"></video>
+            </div>
+            <div class="expanded-info">
+                <div id="expanded-title" class="expanded-title">---</div>
+                <div id="expanded-artist" class="expanded-artist">---</div>
+            </div>
+            <div class="expanded-seekbar">
+                <span id="time-current" class="time-label">0:00</span>
+                <input type="range" id="seek-slider" class="seek-slider" min="0" max="100" value="0" oninput="seekTo(this.value)" />
+                <span id="time-total" class="time-label">0:00</span>
+            </div>
+            <div class="expanded-controls">
+                <button class="ex-ctrl" onclick="prevTrack()">â®</button>
+                <button class="ex-ctrl ex-play" id="btn-play-ex" onclick="togglePlay()">â–¶</button>
+                <button class="ex-ctrl" onclick="nextTrack()">â­</button>
+            </div>
+            
+            <div class="expanded-actions-grid">
+                <button id="btn-add-playlist" class="action-grid-btn" onclick="addToPlaylist()">
+                    <span class="action-grid-icon">âž•</span>
+                    <span class="action-grid-label">Playlist</span>
+                </button>
+                <button id="btn-switch-mode" class="action-grid-btn" onclick="toggleModeFromPlayer()">
+                    <span class="action-grid-icon" id="switch-icon">ðŸŽ¬</span>
+                    <span class="action-grid-label" id="switch-label">Passa a Video</span>
+                </button>
+                <button id="btn-download" class="action-grid-btn" onclick="startDownload()">
+                    <span class="action-grid-icon">ðŸ“¥</span>
+                    <span class="action-grid-label">Download</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- â•â•â• SETTINGS MODAL (Impostazioni Classiche) â•â•â• -->
+        <div id="settings-modal" class="settings-modal hidden">
+            <div class="settings-backdrop" onclick="toggleSettings()"></div>
+            <div class="settings-sheet">
+                <div class="settings-header">
+                    <div class="settings-title">âš™ï¸ Impostazioni Tortuga</div>
+                    <button class="settings-close" onclick="toggleSettings()" title="Chiudi">âœ•</button>
+                </div>
+                
+                <div class="settings-body">
+                    <!-- QualitÃ  Streaming -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">QUALITÃ€ AUDIO / STREAMING</div>
+                        <div class="settings-option">
+                            <div>
+                                <div class="option-name">QualitÃ  Massima (HQ)</div>
+                                <div class="option-desc">Audio cristallino ad alta definizione</div>
+                            </div>
+                            <input type="radio" name="stream_quality" value="high" id="q-high" checked onchange="setQuality('high')">
+                        </div>
+                        <div class="settings-option">
+                            <div>
+                                <div class="option-name">Risparmio Dati (Standard)</div>
+                                <div class="option-desc">Flusso leggero per connessioni lente</div>
+                            </div>
+                            <input type="radio" name="stream_quality" value="low" id="q-low" onchange="setQuality('low')">
+                        </div>
+                    </div>
+
+                    <!-- Gestione Memoria Cache -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">MEMORIA & CACHE SQLITE</div>
+                        <div class="cache-info-box">
+                            <div class="cache-stat-item">
+                                <span class="cache-stat-val" id="stat-streams">0</span>
+                                <span class="cache-stat-lbl">Stream memorizzati</span>
+                            </div>
+                            <div class="cache-stat-item">
+                                <span class="cache-stat-val" id="stat-searches">0</span>
+                                <span class="cache-stat-lbl">Ricerche salvate</span>
+                            </div>
+                            <div class="cache-stat-item">
+                                <span class="cache-stat-val" id="stat-size">0 KB</span>
+                                <span class="cache-stat-lbl">Dimensione DB</span>
+                            </div>
+                        </div>
+                        <button class="settings-action-btn" onclick="clearCache()">
+                            ðŸ—‘ï¸ Svuota Cache Temporanea
+                        </button>
+                    </div>
+
+                    <!-- Scorciatoia Rapida Monitor Banda -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">CONSUMO RETE</div>
+                        <button class="settings-action-btn" onclick="toggleSettings(); openBandwidthModal();" style="background: rgba(0, 242, 255, 0.1); border-color: rgba(0, 242, 255, 0.35); color: #00f2ff;">
+                            ðŸ“Š Apri Monitor Consumo Banda & Dati
+                        </button>
+                    </div>
+
+                    <!-- Info App -->
+                    <div class="settings-group">
+                        <div class="settings-group-title">INFORMAZIONI PIATTAFORMA</div>
+                        <div class="settings-info-row">
+                            <span>Versione Desktop</span>
+                            <span class="info-tag">v3.6 PC Web Edition</span>
+                        </div>
+                        <div class="settings-info-row">
+                            <span>Backend Engine</span>
+                            <span class="info-tag" id="engine-status">Python Flask + Zero Leakage OK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- â•â•â• BANDWIDTH MODAL (Monitor Banda Dedicato) â•â•â• -->
+        <div id="bandwidth-modal" class="settings-modal hidden">
+            <div class="settings-backdrop" onclick="closeBandwidthModal()"></div>
+            <div class="settings-sheet bandwidth-sheet">
+                <div class="settings-header">
+                    <div class="settings-title">ðŸ“Š Monitor Consumo Banda & Dati</div>
+                    <button class="settings-close" onclick="closeBandwidthModal()" title="Chiudi">âœ•</button>
+                </div>
+                
+                <div class="settings-body">
+                    <!-- Sessione Live -->
+                    <div class="bandwidth-live-card">
+                        <div class="bw-live-header">
+                            <span class="bw-live-dot"></span>
+                            <span class="bw-live-title">Dati Trasferiti in Questa Sessione</span>
+                            <span class="bw-live-val" id="bw-session-val">0.0 MB</span>
+                        </div>
+                        <div class="bw-live-sub">Calcolato dal caricamento dell'app (streaming audio, proxy e chiamate API).</div>
+                    </div>
+
+                    <!-- Tabella Guida Consumi per Azione -->
+                    <div class="bw-table-wrap">
+                        <div class="bw-row-header">
+                            <span>Azione Utente</span>
+                            <span>Consumo per UnitÃ </span>
+                            <span>Consumo Orario</span>
+                        </div>
+                        <div class="bw-row">
+                            <div class="bw-action"><span class="bw-icon">ðŸŽµ</span> Canzone (YouTube HQ)</div>
+                            <div class="bw-unit"><strong>~3.5 MB</strong> / brano</div>
+                            <div class="bw-hourly">~50 - 65 MB / ora</div>
+                        </div>
+                        <div class="bw-row">
+                            <div class="bw-action"><span class="bw-icon">ðŸ’¾</span> Download Canzone MP3</div>
+                            <div class="bw-unit"><strong>~4.5 MB</strong> / brano</div>
+                            <div class="bw-hourly">Una tantum</div>
+                        </div>
+                        <div class="bw-row">
+                            <div class="bw-action"><span class="bw-icon">ðŸŽ¬</span> Download Videoclip HD</div>
+                            <div class="bw-unit"><strong>~45 MB</strong> / video</div>
+                            <div class="bw-hourly">Una tantum</div>
+                        </div>
+                        <div class="bw-row">
+                            <div class="bw-action"><span class="bw-icon">ðŸ“º</span> Serie TV / Anime (SC/Vix)</div>
+                            <div class="bw-unit"><strong>~350 - 650 MB</strong> / ep</div>
+                            <div class="bw-hourly">~800 MB - 1.2 GB / ora</div>
+                        </div>
+                        <div class="bw-row highlight-film">
+                            <div class="bw-action"><span class="bw-icon">ðŸ¿</span> Film Completo Tortuga TV</div>
+                            <div class="bw-unit"><strong>~1.8 GB</strong> (720p) / <strong>~3.2 GB</strong> (1080p)</div>
+                            <div class="bw-hourly">~1.5 - 2.0 GB / ora</div>
+                        </div>
+                    </div>
+
+                    <!-- Simulatore Interattivo Mensile -->
+                    <div class="bw-calc-card">
+                        <div class="bw-calc-title">ðŸ’¡ Simulatore Stima Consumo Mensile</div>
+                        <div class="bw-slider-row">
+                            <label for="bw-slider-songs">Canzoni al giorno:</label>
+                            <input type="range" id="bw-slider-songs" min="0" max="60" value="15" oninput="calculateBandwidthProjection()" class="bw-slider">
+                            <span id="bw-val-songs" class="bw-pill">15 brani</span>
+                        </div>
+                        <div class="bw-slider-row">
+                            <label for="bw-slider-movies">Film/Episodi a settimana:</label>
+                            <input type="range" id="bw-slider-movies" min="0" max="20" value="3" oninput="calculateBandwidthProjection()" class="bw-slider">
+                            <span id="bw-val-movies" class="bw-pill">3 titoli</span>
+                        </div>
+                        <div class="bw-result-box">
+                            <div class="bw-res-item">
+                                <span class="bw-res-label">Consumo stimato / mese:</span>
+                                <span class="bw-res-val" id="bw-res-total">~26.0 GB / mese</span>
+                            </div>
+                            <div class="bw-res-item">
+                                <span class="bw-res-label">VelocitÃ  upload server consigliata:</span>
+                                <span class="bw-res-val-sub" id="bw-res-speed">Min. 5 - 10 Mbps</span>
+                            </div>
+                        </div>
+                        <div class="bw-note">
+                            â„¹ï¸ <strong>Cloudflare Tunnel & Server Host:</strong> Il tunnel Cloudflare Free <u>non applica limiti</u> di gigabyte mensili. L'unico fattore vincolante Ã¨ la velocitÃ  in upload della connessione dove risiede il server PC.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- â•â•â• MOBILE BOTTOM NAVIGATION BAR (Smartphone & Tablet) â•â•â• -->
+        <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+            <button class="mobile-nav-item active" id="mob-nav-home" onclick="switchTab('home')">
+                <span class="mob-nav-icon">ðŸ </span>
+                <span class="mob-nav-label">Home</span>
+            </button>
+            <button class="mobile-nav-item" id="mob-nav-playlist" onclick="switchTab('playlist')">
+                <span class="mob-nav-icon">ðŸ“‘</span>
+                <span class="mob-nav-label">Playlist</span>
+            </button>
+            <button class="mobile-nav-item" id="mob-nav-download" onclick="switchTab('download')">
+                <span class="mob-nav-icon">ðŸ’¾</span>
+                <span class="mob-nav-label">Download</span>
+            </button>
+            <button class="mobile-nav-item mob-nav-tv" id="mob-nav-tv" onclick="openTortugaTV()">
+                <span class="mob-nav-icon">ðŸ“º</span>
+                <span class="mob-nav-label">Tortuga TV</span>
+            </button>
+            <button class="mobile-nav-item" id="mob-nav-settings" onclick="toggleSettings()">
+                <span class="mob-nav-icon">âš™ï¸</span>
+                <span class="mob-nav-label">Opzioni</span>
+            </button>
+        </nav>
+
+    </div> <!-- /app -->
+
+    <!-- TOAST DOWNLOAD -->
+    <div id="download-toast" class="download-toast hidden">
+        <div class="toast-info">
+            <span id="download-title">Scaricamento...</span>
+            <span id="download-eta" class="toast-eta">0%</span>
+        </div>
+        <div class="toast-progress-bar">
+            <div id="download-progress-fill" class="toast-progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- â•â•â• ORIENTATION GUARD (OBBLIGO ROTAZIONE ORIZZONTALE PER SMARTPHONE) â•â•â• -->
+    <div id="rotate-device-overlay" class="rotate-device-overlay" style="display:none;">
+        <div class="rotate-modal-card">
+            <div class="rotate-phone-anim">
+                <div class="rotate-phone-body">
+                    <div class="phone-screen">
+                        <span class="phone-emoji">ðŸŽµ</span>
+                    </div>
+                </div>
+                <div class="rotate-glow-ring"></div>
+            </div>
+            <h2 class="rotate-title">Ruota lo Smartphone in Orizzontale</h2>
+            <p class="rotate-desc">
+                Tortuga Music & TV Ã¨ ottimizzato per la modalitÃ  <strong>Orizzontale (Landscape)</strong> su smartphone per garantirti controlli fluidi, playlist completa e video ad alta definizione.
+            </p>
+            <button class="rotate-action-btn" onclick="requestLandscapeMode()">
+                <span>ðŸ–¥ï¸</span> <span>Gira a Schermo Intero</span>
+            </button>
+            <div class="rotate-hint">Oppure sblocca la rotazione automatica del tuo dispositivo e ruotalo</div>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=5.5"></script>
+</body>
+</html>

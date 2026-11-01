@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Cartella download locali
+downloads/*
+!downloads/.gitkeep
+
+# Dati temporanei
+.env
+.DS_Store
+Thumbs.db
+data/*.db*
+
