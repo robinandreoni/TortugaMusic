@@ -205,8 +205,6 @@ To compile the Android APK or AAB bundle yourself:
 ```text
 TortugaMusic/
 ├── TortugaMusic-v3.6-Release.apk   # Ready-to-install Android Release APK
-├── PLAYSTORE_RELEASE_v3.6.md       # Release notes & store description
-├── TASKS_TORTUGA_MUSIC.md          # Roadmap & development tasks
 ├── build_release.py                # Automated version & APK/AAB build script
 ├── BUILD_RELEASE.bat               # 1-Click release compiler
 ├── PlayStore_Assets/               # High-res icons, banners & promotional artwork
@@ -239,3 +237,4 @@ TortugaMusic/
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.  
 Created by [Robin Andreoni](https://github.com/robinandreoni) & [Tortuga Italia](https://www.tortugaitalia.com).
+
